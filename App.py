@@ -1,10 +1,13 @@
 import streamlit as st
-from transformers import pipeline
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
 
 # Cache the summarizer so it doesn't reload every time
 @st.cache_resource
 def load_summarizer():
-    return pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
+    model_name = "sshleifer/distilbart-cnn-12-6"
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+    return pipeline("summarization", model=model, tokenizer=tokenizer)
 
 summarizer = load_summarizer()
 
